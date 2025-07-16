@@ -18,6 +18,7 @@ exports.captureOrderHandler = async (req, res) => {
 
   try {
     const result = await captureOrder(orderID);
+    console.log(result)
     res.json(result);
   } catch (error) {
     console.error("Error capturing order:", error.message);
