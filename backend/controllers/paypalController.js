@@ -9,7 +9,7 @@ exports.createOrderHandler = async (req, res) => {
     res.json({ id: orderID });
   } catch (error) {
     console.error("Error creating order:", error.message);
-    res.status(500).json({ error: "Failed to create PayPal order" });
+    res.status(500).json({ error: "Failed to create PayPal order " });
   }
 };
 
@@ -18,7 +18,7 @@ exports.captureOrderHandler = async (req, res) => {
 
   try {
     const result = await captureOrder(orderID);
-    console.log(result)
+    console.log(res)
     res.json(result);
   } catch (error) {
     console.error("Error capturing order:", error.message);
