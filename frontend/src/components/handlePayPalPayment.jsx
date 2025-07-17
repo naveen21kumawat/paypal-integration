@@ -51,7 +51,10 @@ export const handlePayPalPayment = async (price, title) => {
           `http://localhost:5000/api/paypal/capture-order/${data.orderID}`
         );
         const name = captureRes?.data?.payer?.name?.given_name || "User";
-        alert(`✅ Payment successful by ${name}`);
+        // const info = captureRes?.data?.payer;
+        console.log(name)
+        // res.json({info})
+        alert(`✅ Payment successful by ${info}`);
         container.remove();
       },
       onCancel: () => {

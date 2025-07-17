@@ -1,9 +1,9 @@
-// SubscriptionForm.jsx
 import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 
-const PAYPAL_CLIENT_ID = "AePlNSus7RajjLF7YmjuHqJ6Dw4wNH6iQyAB8Vz9ESSSb5QDE4nwXz0VoEJiPL7mOje4cxOnGamGGZFS"; // Sandbox
+// PayPal sandbox credentials (client ID and plan ID)
+const PAYPAL_CLIENT_ID = "AePlNSus7RajjLF7YmjuHqJ6Dw4wNH6iQyAB8Vz9ESSSb5QDE4nwXz0VoEJiPL7mOje4cxOnGamGGZFS";
 const PLAN_ID = "P-1RL929111W456384RNB4J4QQ";
 const PRICE = 9.99;
 
@@ -20,11 +20,12 @@ export default function SubscriptionForm() {
       });
 
       const data = response.data.subscription;
+      console.log(data)
       setSubscriptionDetails(data);
       setSubscribed(true);
     } catch (error) {
       alert("Failed to fetch subscription details.");
-      console.error(error);
+      console.error("❌ Error from backend:", error?.response?.data || error.message);
     }
   };
 
@@ -74,14 +75,7 @@ export default function SubscriptionForm() {
         <>
           <p style={{ color: "green" }}>✅ Subscription successful!</p>
           {subscriptionDetails && (
-            <div
-              style={{
-                marginTop: "20px",
-                background: "#f9f9f9",
-                padding: "15px",
-                borderRadius: "8px",
-              }}
-            >
+            <div style={{ marginTop: "20px", background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
               <h3>Subscription Details:</h3>
               <p><strong>ID:</strong> {subscriptionDetails.id}</p>
               <p><strong>Status:</strong> {subscriptionDetails.status}</p>
@@ -90,7 +84,6 @@ export default function SubscriptionForm() {
               <p><strong>Next Billing:</strong> {new Date(subscriptionDetails.billing_info?.next_billing_time).toLocaleString()}</p>
               <p><strong>Subscriber:</strong> {subscriptionDetails.subscriber?.name?.given_name} {subscriptionDetails.subscriber?.name?.surname}</p>
               <p><strong>Email:</strong> {subscriptionDetails.subscriber?.email_address}</p>
-              <p><strong>Transaction ID:</strong> {subscriptionDetails.transaction_id || "N/A"}</p>
             </div>
           )}
         </>

@@ -9,10 +9,10 @@ import SubscriptionForm from './components/SubscriptionForm'
 function App() {
   return(
     <>
-    <Courses/>
+    {/* <Courses/> */}
     
      {/* <SubscriptionButton/> */}
-     {/* <SubscriptionForm/> */}
+     <SubscriptionForm/>
 
     </>
   )
