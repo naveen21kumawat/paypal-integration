@@ -1,52 +1,47 @@
-// SubscriptionForm.jsx
-import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import axios from "axios";
+import useSubscription from "./useSubscription";
 
 const PAYPAL_CLIENT_ID = "AePlNSus7RajjLF7YmjuHqJ6Dw4wNH6iQyAB8Vz9ESSSb5QDE4nwXz0VoEJiPL7mOje4cxOnGamGGZFS"; // Sandbox
-const PLAN_ID = "P-1RL929111W456384RNB4J4QQ";
-const PRICE = 9.99;
 
 export default function SubscriptionForm() {
-  const [subscribed, setSubscribed] = useState(false);
-  const [showPayPal, setShowPayPal] = useState(false);
-  const [subscriptionDetails, setSubscriptionDetails] = useState(null);
+  const {
+    subscribed,
+    showPayPal,
+    subscriptionDetails,
+    handleShowPayPal,
+    handleApprove,
+    PLAN_ID,
+    PRICE,
+  } = useSubscription();
 
-  const handleApprove = async (subscriptionID) => {
-    try {
-      const response = await axios.post("http://localhost:5000/api/save-subscription", {
-        subscriptionID,
-        price: PRICE,
-      });
-
-      const data = response.data.subscription;
-      setSubscriptionDetails(data);
-      setSubscribed(true);
-    } catch (error) {
-      alert("Failed to fetch subscription details.");
-      console.error(error);
-    }
+  const styles = {
+    container: { padding: "20px", maxWidth: "600px", margin: "0 auto" },
+    subscribeButton: {
+      padding: "10px 20px",
+      backgroundColor: "#0070ba",
+      color: "#fff",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontSize: "16px",
+    },
+    detailsBox: {
+      marginTop: "20px",
+      background: "#f9f9f9",
+      padding: "15px",
+      borderRadius: "8px",
+      boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+    },
   };
 
   return (
-    <div className="subscription-container" style={{ padding: "20px", maxWidth: "600px" }}>
+    <div style={styles.container}>
       <h2>Subscribe to our Pharmacy Plan</h2>
 
       {!subscribed ? (
         <>
           {!showPayPal ? (
-            <button
-              onClick={() => setShowPayPal(true)}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#0070ba",
-                color: "#fff",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-              }}
-            >
+            <button onClick={handleShowPayPal} style={styles.subscribeButton}>
               Subscribe ₹{PRICE}
             </button>
           ) : (
@@ -59,11 +54,9 @@ export default function SubscriptionForm() {
             >
               <PayPalButtons
                 style={{ layout: "vertical" }}
-                createSubscription={(data, actions) => {
-                  return actions.subscription.create({
-                    plan_id: PLAN_ID,
-                  });
-                }}
+                createSubscription={(data, actions) =>
+                  actions.subscription.create({ plan_id: PLAN_ID })
+                }
                 onApprove={(data) => handleApprove(data.subscriptionID)}
                 onError={(err) => console.error("PayPal Error", err)}
               />
@@ -74,14 +67,7 @@ export default function SubscriptionForm() {
         <>
           <p style={{ color: "green" }}>✅ Subscription successful!</p>
           {subscriptionDetails && (
-            <div
-              style={{
-                marginTop: "20px",
-                background: "#f9f9f9",
-                padding: "15px",
-                borderRadius: "8px",
-              }}
-            >
+            <div style={styles.detailsBox}>
               <h3>Subscription Details:</h3>
               <p><strong>ID:</strong> {subscriptionDetails.id}</p>
               <p><strong>Status:</strong> {subscriptionDetails.status}</p>

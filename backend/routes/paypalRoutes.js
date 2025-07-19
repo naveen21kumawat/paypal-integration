@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {
-  createOrderHandler,
-  captureOrderHandler,
-} = require("../controllers/paypalController");
+const { saveSubscription } = require("../controllers/paypalController");
 
-router.post("/create-order", createOrderHandler);
-router.post("/capture-order/:orderID", captureOrderHandler);
+router.post("/save-subscription", saveSubscription);
 
 module.exports = router;
